@@ -10,8 +10,9 @@
 
 /* Bouton */
 .button {
-  background-color: #4CAF50; /* Couleur de fond */
-  color: white; /* Couleur du texte */
+  border-color: #C0DF40;
+  background-color: #40B5CB; /* Couleur de fond */
+  color: black; /* Couleur du texte */
   padding: 15px 32px; /* Rembourrage */
   text-align: center; /* Alignement du texte */
   text-decoration: none;
@@ -20,6 +21,12 @@
   margin: 4px 2px;
   cursor: pointer;
   border-radius: 8px; /* Bord arrondi */
+}
+
+.button:hover {
+  background-color: #C0DF40; /* Nouvelle couleur de fond au survol */
+  border-color: #40B5CB;
+
 }
 
 /* Carte */
@@ -35,12 +42,22 @@
   margin: 10px; /* Marge entre les cartes */
   position: relative;
   perspective: 1000px; /* Perspective pour l'effet 3D */
+  cursor: pointer; /* Curseur au survol de la carte */
+  transition: transform 0.5s; /* Animation de transition */
+  border: 5px solid transparent;
+  border-color: #C0DF40;
+  border-radius: 8px; 
+}
+
+.card:hover {
+  border-color: #40B5CB;
+  border-radius: 8px; 
 }
 
 .card img {
   width: 100%; /* Taille de l'image à 100% de la carte */
   height: 100%; /* Taille de l'image à 100% de la carte */
-  border-radius: 8px; /* Bord arrondi de l'image */
+  border-radius: 3px; /* Bord arrondi de l'image */
 }
 
 /* Dos de carte */
@@ -50,18 +67,16 @@
   left: 0;
   width: 100%;
   height: 100%;
-  backface-visibility: hidden; /* Masquer le dos de la carte lors de la rotation */
-}
-
-/* Animation de retournement de la carte */
-.card.flipped .back-image {
-  transform: rotateY(180deg); /* Rotation de 180 degrés */
+  backface-visibility: hidden; 
 }
 
 body {
   background-image: url('./images/background.webp');
   background-size: cover;
   background-position: center;
-  height: 100vh; /* Assurez-vous que l'arrière-plan couvre toute la hauteur de la page */
+  height: 100vh; 
 }
 
+.card.flipped {
+  transform: rotateY(360deg);
+}

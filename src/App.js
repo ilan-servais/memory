@@ -6,14 +6,15 @@ import backImage from './images/image6.jpg'; // Importez l'image du dos de carte
 import cardImages from './data'; // Importez les liens vers les images des cartes
 import './App.css';
 
-
 function generateCardPairs() {
   const cards = [];
   const numPairs = 5;
+  const imagesCopy = [...cardImages];
   for (let i = 0; i < numPairs; i++) {
-    const image = cardImages[i];
-    cards.push({ id: i * 2, image, isFlipped: false });
-    cards.push({ id: i * 2 + 1, image, isFlipped: false });
+    const imageIndex = Math.floor(Math.random() * imagesCopy.length);
+    const image = imagesCopy.splice(imageIndex, 1)[0];
+    cards.push({ id: i * 2, image, isFlipped: true });
+    cards.push({ id: i * 2 + 1, image, isFlipped: true });
   }
   return cards;
 }
@@ -30,6 +31,30 @@ function shuffle(array) {
 function App() {
   const [cards, setCards] = useState(generateCardPairs());
   const [flippedCards, setFlippedCards] = useState([]);
+
+  const handleCardClick = (id, image) => {
+    // Gérer le clic sur une carte
+    const flippedCard = { id, image };
+    setFlippedCards(prevFlippedCards => [...prevFlippedCards, flippedCard]);
+    setCards(prevCards => prevCards.map(card => {
+      if (card.id === id) {
+        return { ...card, isFlipped: true };
+      }
+      return card;
+    }));
+  };
+
+  const handleShuffleClick = () => {
+    // Mélanger les cartes dans un ordre aléatoire
+    const shuffledCards = shuffle(cards);
+    setCards(shuffledCards.map(card => ({ ...card, isFlipped: false })));
+  };
+
+  const handleRestartClick = () => {
+    // Rejouer la partie en remettant les cartes à zéro
+    const newCards = generateCardPairs();
+    setCards(newCards);
+  };
 
   useEffect(() => {
     // Vérifier la correspondance des cartes après le retournement
@@ -56,30 +81,20 @@ function App() {
       }
       setFlippedCards([]);
     }
-  }, [flippedCards]);
+  }, [flippedCards, cards]);
 
-  const handleCardClick = (id, image) => {
-    // Gérer le clic sur une carte
-    const flippedCard = { id, image };
-    setFlippedCards(prevFlippedCards => [...prevFlippedCards, flippedCard]);
-    setCards(prevCards => prevCards.map(card => {
-      if (card.id === id) {
-        return { ...card, isFlipped: true };
-      }
-      return card;
-    }));
-  };
-
-  const handleShuffleClick = () => {
-    // Mélanger les cartes dans un ordre aléatoire
-    const shuffledCards = shuffle(cards);
-    setCards(shuffledCards);
-  };
+  useEffect(() => {
+    // Vérifier si toutes les cartes ont été retournées pour afficher un message de victoire
+    if (cards.every(card => card.isFlipped)) {
+      alert("Bravo ! Vous avez gagné !");
+    }
+  }, [cards]);
 
   return (
     <div className="App">
       <img src={titleImage} alt="Titre" />
-      <Button label="Mélanger les cartes" onClick={handleShuffleClick} />
+      <Button className="shuffle-button" label="Mélanger" onClick={handleShuffleClick} />
+      <Button className="restart-button" label="Rejouer" onClick={handleRestartClick} />
       <div className="card-container">
         {cards.map(card => (
           <Card
