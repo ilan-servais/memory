@@ -33,19 +33,22 @@ function App() {
   const [flippedCards, setFlippedCards] = useState([]);
   const [time, setTime] = useState(0);
   const [isRunning, setIsRunning] = useState(false); // Ajouter un state pour le statut du jeu
-  const [isGameWon, setIsGameWon] = useState(false); // Nouvel état pour indiquer si le jeu est gagné
+  const [pairsFound, setPairsFound] = useState(0); // Compteur de paires trouvées
+  const totalPairs = 5; // Nombre total de paires dans le jeu
 
   useEffect(() => {
     let timer;
-    if (isRunning && !isGameWon) { // Ajoutez !isGameWon ici pour arrêter le chrono lorsque le jeu est gagné
+    if (isRunning && pairsFound !== totalPairs) { // Modifier la condition pour arrêter le chrono lorsque toutes les paires sont trouvées
       timer = setInterval(() => {
         setTime(prevTime => prevTime + 1);
       }, 1000);
+    } else {
+      clearInterval(timer); // Arrêter le chrono si le jeu est gagné ou toutes les paires sont trouvées
     }
   
     return () => clearInterval(timer);
-  }, [isRunning, isGameWon]); // Assurez-vous de surveiller isGameWon dans le tableau de dépendances
-  
+  }, [isRunning, pairsFound]);
+      
   const handleCardClick = (id, image) => {
     // Gérer le clic sur une carte
     const flippedCard = { id, image };
@@ -61,6 +64,7 @@ function App() {
   const handleStartClick = () => {
     // Démarrer le jeu et le chrono
     setIsRunning(true);
+    setPairsFound(0); // Réinitialiser le compteur de paires trouvées
     setCards(shuffle(cards.map(card => ({ ...card, isFlipped: false }))));
   };
 
@@ -69,7 +73,6 @@ function App() {
     const newCards = generateCardPairs();
     setCards(newCards);
     setIsRunning(false);
-    setIsGameWon(false); // Réinitialiser l'état de victoire
     setTime(0);
   };
 
@@ -85,6 +88,7 @@ function App() {
           }
           return card;
         }));
+        setPairsFound(prevPairsFound => prevPairsFound + 1); // Incrémenter le compteur de paires trouvées
       } else {
         // Les cartes ne correspondent pas, les retourner après un court délai
         setTimeout(() => {
@@ -100,6 +104,13 @@ function App() {
     }
   }, [flippedCards, cards]);
 
+  useEffect(() => {
+    // Vérifier si toutes les paires ont été trouvées pour arrêter le jeu
+    if (pairsFound === totalPairs) {
+      setIsRunning(false);
+    }
+  }, [pairsFound, totalPairs]);
+
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
@@ -109,9 +120,9 @@ function App() {
   return (
     <div className="App">
       <img src={titleImage} alt="Titre" />
-      {!isRunning && !isGameWon && <Button className="start-button" label="Start" onClick={handleStartClick} />}
-      {isRunning && !isGameWon && <Button className="restart-button" label="Rejouer" onClick={handleRestartClick} />}
-      {isGameWon && <div className="message">Bravo ! Vous avez gagné !</div>}
+      {!isRunning && <Button className="start-button" label="Start" onClick={handleStartClick} />}
+      {isRunning && <Button className="restart-button" label="Rejouer" onClick={handleRestartClick} />}
+      {pairsFound === totalPairs && <div className="message">Bravo ! Vous avez gagné !</div>}
       <div className="time">Time: {formatTime(time)}</div>
       <div className="card-container">
         {cards.map(card => (
