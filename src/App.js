@@ -31,7 +31,21 @@ function shuffle(array) {
 function App() {
   const [cards, setCards] = useState(generateCardPairs());
   const [flippedCards, setFlippedCards] = useState([]);
+  const [time, setTime] = useState(0);
+  const [isRunning, setIsRunning] = useState(false); // Ajouter un state pour le statut du jeu
+  const [isGameWon, setIsGameWon] = useState(false); // Nouvel état pour indiquer si le jeu est gagné
 
+  useEffect(() => {
+    let timer;
+    if (isRunning && !isGameWon) { // Ajoutez !isGameWon ici pour arrêter le chrono lorsque le jeu est gagné
+      timer = setInterval(() => {
+        setTime(prevTime => prevTime + 1);
+      }, 1000);
+    }
+  
+    return () => clearInterval(timer);
+  }, [isRunning, isGameWon]); // Assurez-vous de surveiller isGameWon dans le tableau de dépendances
+  
   const handleCardClick = (id, image) => {
     // Gérer le clic sur une carte
     const flippedCard = { id, image };
@@ -44,16 +58,19 @@ function App() {
     }));
   };
 
-  const handleShuffleClick = () => {
-    // Mélanger les cartes dans un ordre aléatoire
-    const shuffledCards = shuffle(cards);
-    setCards(shuffledCards.map(card => ({ ...card, isFlipped: false })));
+  const handleStartClick = () => {
+    // Démarrer le jeu et le chrono
+    setIsRunning(true);
+    setCards(shuffle(cards.map(card => ({ ...card, isFlipped: false }))));
   };
 
   const handleRestartClick = () => {
-    // Rejouer la partie en remettant les cartes à zéro
+    // Réinitialiser le jeu et le chrono
     const newCards = generateCardPairs();
     setCards(newCards);
+    setIsRunning(false);
+    setIsGameWon(false); // Réinitialiser l'état de victoire
+    setTime(0);
   };
 
   useEffect(() => {
@@ -83,18 +100,19 @@ function App() {
     }
   }, [flippedCards, cards]);
 
-  useEffect(() => {
-    // Vérifier si toutes les cartes ont été retournées pour afficher un message de victoire
-    if (cards.every(card => card.isFlipped)) {
-      alert("Bravo ! Vous avez gagné !");
-    }
-  }, [cards]);
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+  };
 
   return (
     <div className="App">
       <img src={titleImage} alt="Titre" />
-      <Button className="shuffle-button" label="Mélanger" onClick={handleShuffleClick} />
-      <Button className="restart-button" label="Rejouer" onClick={handleRestartClick} />
+      {!isRunning && !isGameWon && <Button className="start-button" label="Start" onClick={handleStartClick} />}
+      {isRunning && !isGameWon && <Button className="restart-button" label="Rejouer" onClick={handleRestartClick} />}
+      {isGameWon && <div className="message">Bravo ! Vous avez gagné !</div>}
+      <div className="time">Time: {formatTime(time)}</div>
       <div className="card-container">
         {cards.map(card => (
           <Card
