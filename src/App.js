@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import Button from './components/Button';
 import Card from './components/Card';
-import titleImage from './images/title.png';
-import backImage from './images/image6.jpg';
+import titleImage from './images/title.webp';
+import backImage from './images/image6.webp';
 import cardImages from './data';
 import './App.css';
 
-function generateCardPairs() {
+function generateCardPairs(numPairs) {
   const cards = [];
-  const numPairs = 5;
   const imagesCopy = [...cardImages];
   for (let i = 0; i < numPairs; i++) {
     const imageIndex = Math.floor(Math.random() * imagesCopy.length);
@@ -28,7 +27,8 @@ function shuffle(array) {
 }
 
 function App() {
-  const [cards, setCards] = useState(generateCardPairs());
+  const [numPairs, setNumPairs] = useState(5);
+  const [cards, setCards] = useState(generateCardPairs(numPairs));
   const [flippedCards, setFlippedCards] = useState([]);
   const [time, setTime] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
@@ -39,18 +39,15 @@ function App() {
 
   useEffect(() => {
     let timer;
-    if (isRunning && pairsFound !== totalPairs) {
+    if (isRunning && pairsFound !== numPairs) {
       timer = setInterval(() => {
         setTime(prevTime => prevTime + 1);
       }, 1000);
     } else {
       clearInterval(timer);
     }
-  
     return () => clearInterval(timer);
-  }, [isRunning, pairsFound]);
-
-  const totalPairs = 5;
+  }, [isRunning, pairsFound, numPairs]);
 
   const handleCardClick = (id, image) => {
     const flippedCard = { id, image };
@@ -66,11 +63,11 @@ function App() {
   const handleStartClick = () => {
     setIsRunning(true);
     setPairsFound(0);
-    setCards(shuffle(cards.map(card => ({ ...card, isFlipped: false }))));
+    setCards(shuffle(generateCardPairs(numPairs).map(card => ({ ...card, isFlipped: false }))));
   };
 
   const handleRestartClick = () => {
-    const newCards = generateCardPairs();
+    const newCards = generateCardPairs(numPairs);
     setCards(newCards);
     setIsRunning(false);
     setTime(0);
@@ -84,7 +81,17 @@ function App() {
 
   const handleSaveScore = () => {
     setScores(prevScores => [...prevScores, { playerName, time }]);
-    handleRestartClick(); // Redémarrer le jeu après avoir enregistré le score
+    handleRestartClick();
+  };
+
+  const handleAddPair = () => {
+    setNumPairs(prevNumPairs => prevNumPairs + 1);
+  };
+
+  const handleRemovePair = () => {
+    if (numPairs > 1) {
+      setNumPairs(prevNumPairs => prevNumPairs - 1);
+    }
   };
 
   useEffect(() => {
@@ -113,11 +120,11 @@ function App() {
   }, [flippedCards, cards]);
 
   useEffect(() => {
-    if (pairsFound === totalPairs) {
+    if (pairsFound === numPairs) {
       setIsRunning(false);
       setIsGameWon(true);
     }
-  }, [pairsFound, totalPairs]);
+  }, [pairsFound, numPairs]);
 
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
@@ -171,30 +178,34 @@ function App() {
             />
           ))}
         </div>
+        <div className="difficulty-buttons">
+          <Button className="add-pair-button" label="Add Pair" onClick={handleAddPair} />
+          <Button className="remove-pair-button" label="Remove Pair" onClick={handleRemovePair} />
+        </div>
         <div className="leaderboard">
-        <h2>Leaderboard</h2>
+          <h2>Leaderboard</h2>
           <div className="sort-buttons-container">
             <Button label="Sort by Time" onClick={handleSortScores} className="sort-button" />
             <Button label="Sort by Name" onClick={handleSortScoresByName} className="sort-button" />
             <Button label="Reset Scores" onClick={handleResetScores} className="sort-button" />
           </div>
-        <table>
-          <thead>
-            <tr>
-              <th>Player Name</th>
-              <th>Time</th>
-            </tr>
-          </thead>
-          <tbody>
-            {scores.map((score, index) => (
-              <tr key={index}>
-                <td>{score.playerName}</td>
-                <td>{formatTime(score.time)}</td>
+          <table>
+            <thead>
+              <tr>
+                <th>Player Name</th>
+                <th>Time</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {scores.map((score, index) => (
+                <tr key={index}>
+                  <td>{score.playerName}</td>
+                  <td>{formatTime(score.time)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
