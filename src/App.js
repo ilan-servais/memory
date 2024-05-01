@@ -125,8 +125,31 @@ function App() {
     return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
   };
 
+  const handleResetScores = () => {
+    setScores([]);
+  };
+
+  const handleSortScores = () => {
+    const sortedScores = [...scores].sort((a, b) => a.time - b.time);
+    setScores(sortedScores);
+  };
+
+  const handleSortScoresByName = () => {
+    const sortedScores = [...scores].sort((a, b) => a.playerName.localeCompare(b.playerName));
+    setScores(sortedScores);
+  };
+
+  useEffect(() => {
+    const storedScores = JSON.parse(localStorage.getItem('memory_game_scores')) || [];
+    setScores(storedScores);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('memory_game_scores', JSON.stringify(scores));
+  }, [scores]);
+
   return (
-    <div>
+    <div className="center-content">
       <div className="App">
         <img src={titleImage} alt="Titre" className="title-image" />
         {!isRunning && !isGameWon && <Button className="start-button" label="Start" onClick={handleStartClick} />}
@@ -134,7 +157,7 @@ function App() {
         {isGameWon && (
           <div>
             <div className="message">You Won !</div>
-            <input type="text" value={playerName} onChange={handlePlayerNameChange} />
+            <input type="text" value={playerName} onChange={handlePlayerNameChange} placeholder="Enter your name" />
             <Button className="save-score-button" label="Save Score" onClick={handleSaveScore} />
           </div>
         )}
@@ -151,6 +174,11 @@ function App() {
       </div>
       <div className="leaderboard">
         <h2>Leaderboard</h2>
+          <div className="sort-buttons-container">
+            <Button label="Sort by Time" onClick={handleSortScores} className="sort-button" />
+            <Button label="Sort by Name" onClick={handleSortScoresByName} className="sort-button" />
+            <Button label="Reset Scores" onClick={handleResetScores} className="sort-button" />
+          </div>
         <table>
           <thead>
             <tr>
