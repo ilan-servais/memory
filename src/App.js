@@ -34,6 +34,7 @@ function App() {
   const [time, setTime] = useState(0);
   const [isRunning, setIsRunning] = useState(false); // Ajouter un state pour le statut du jeu
   const [pairsFound, setPairsFound] = useState(0); // Compteur de paires trouvées
+  const [isGameWon, setIsGameWon] = useState(false);
   const totalPairs = 5; // Nombre total de paires dans le jeu
 
   useEffect(() => {
@@ -73,9 +74,10 @@ function App() {
     const newCards = generateCardPairs();
     setCards(newCards);
     setIsRunning(false);
-    setTime(0);
+    setTime(0); // Remettre le chrono à zéro
+    setIsGameWon(false); // Réinitialiser le state isGameWon
   };
-
+  
   useEffect(() => {
     // Vérifier la correspondance des cartes après le retournement
     if (flippedCards.length === 2) {
@@ -108,9 +110,10 @@ function App() {
     // Vérifier si toutes les paires ont été trouvées pour arrêter le jeu
     if (pairsFound === totalPairs) {
       setIsRunning(false);
+      setIsGameWon(true); // Mettre à jour l'état isGameWon
     }
   }, [pairsFound, totalPairs]);
-
+  
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
@@ -118,20 +121,22 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <img src={titleImage} alt="Titre" />
-      {!isRunning && <Button className="start-button" label="Start" onClick={handleStartClick} />}
-      {isRunning && <Button className="restart-button" label="Rejouer" onClick={handleRestartClick} />}
-      {pairsFound === totalPairs && <div className="message">Bravo ! Vous avez gagné !</div>}
-      <div className="time">Time: {formatTime(time)}</div>
-      <div className="card-container">
-        {cards.map(card => (
-          <Card
-            key={card.id}
-            image={card.isFlipped ? card.image : backImage}
-            onClick={() => card.isFlipped ? null : handleCardClick(card.id, card.image)}
-          />
-        ))}
+    <div>
+      <div className="App">
+        <img src={titleImage} alt="Titre" className="title-image" />
+        {!isRunning && !isGameWon && <Button className="start-button" label="Start" onClick={handleStartClick} />}
+        {(!isRunning || isGameWon) && <Button className="restart-button" label="Rejouer" onClick={handleRestartClick} />}
+        {isGameWon && <div className="message">Bravo ! Vous avez gagné !</div>}
+        <div className="time">Time: {formatTime(time)}</div>
+        <div className="card-container">
+          {cards.map(card => (
+            <Card
+              key={card.id}
+              image={card.isFlipped ? card.image : backImage}
+              onClick={() => card.isFlipped ? null : handleCardClick(card.id, card.image)}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
