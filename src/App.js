@@ -125,8 +125,8 @@ function App() {
       <div className="App">
         <img src={titleImage} alt="Titre" className="title-image" />
         {!isRunning && !isGameWon && <Button className="start-button" label="Start" onClick={handleStartClick} />}
-        {(!isRunning || isGameWon) && <Button className="restart-button" label="Rejouer" onClick={handleRestartClick} />}
-        {isGameWon && <div className="message">Bravo ! Vous avez gagné !</div>}
+        {(!isRunning || !isGameWon) && <Button className="restart-button" label="Shufle" onClick={handleRestartClick} />}
+        {isGameWon && <div className="message">You Won !</div>}
         <div className="time">Time: {formatTime(time)}</div>
         <div className="card-container">
           {cards.map(card => (
