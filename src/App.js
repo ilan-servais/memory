@@ -84,13 +84,19 @@ function App() {
     handleRestartClick();
   };
 
+  // Fonction pour ajouter une paire
   const handleAddPair = () => {
-    setNumPairs(prevNumPairs => prevNumPairs + 1);
+    if (numPairs < 13) { // Limiter le nombre maximal de paires à 13
+      setNumPairs(prevNumPairs => prevNumPairs + 1);
+      setCards(generateCardPairs(numPairs + 1)); // Générer un nouveau jeu de cartes avec une paire supplémentaire
+    }
   };
 
+  // Fonction pour enlever une paire
   const handleRemovePair = () => {
-    if (numPairs > 1) {
+    if (numPairs > 5) { // Vérifier qu'il y a au moins 5 paires pour en enlever une
       setNumPairs(prevNumPairs => prevNumPairs - 1);
+      setCards(generateCardPairs(numPairs - 1)); // Générer un nouveau jeu de cartes avec une paire en moins
     }
   };
 
