@@ -171,8 +171,7 @@ function App() {
             />
           ))}
         </div>
-      </div>
-      <div className="leaderboard">
+        <div className="leaderboard">
         <h2>Leaderboard</h2>
           <div className="sort-buttons-container">
             <Button label="Sort by Time" onClick={handleSortScores} className="sort-button" />
@@ -195,6 +194,7 @@ function App() {
             ))}
           </tbody>
         </table>
+      </div>
       </div>
     </div>
   );
