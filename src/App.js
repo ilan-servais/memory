@@ -80,13 +80,13 @@ function App() {
   };
 
   const handleSaveScore = () => {
-    setScores(prevScores => [...prevScores, { playerName, time }]);
+    setScores(prevScores => [...prevScores, { playerName, time, numPairs }]);
     handleRestartClick();
   };
 
   // Fonction pour ajouter une paire
   const handleAddPair = () => {
-    if (numPairs < 13) { // Limiter le nombre maximal de paires à 13
+    if (numPairs < 13) { // Limiter le nombre maximal de paires
       setNumPairs(prevNumPairs => prevNumPairs + 1);
       setCards(generateCardPairs(numPairs + 1)); // Générer un nouveau jeu de cartes avec une paire supplémentaire
     }
@@ -94,7 +94,7 @@ function App() {
 
   // Fonction pour enlever une paire
   const handleRemovePair = () => {
-    if (numPairs > 5) { // Vérifier qu'il y a au moins 5 paires pour en enlever une
+    if (numPairs > 5) { // Vérifie qu'il y a au moins 5 paires mini
       setNumPairs(prevNumPairs => prevNumPairs - 1);
       setCards(generateCardPairs(numPairs - 1)); // Générer un nouveau jeu de cartes avec une paire en moins
     }
@@ -166,7 +166,7 @@ function App() {
       <div className="App">
         <img src={titleImage} alt="Titre" className="title-image" />
         {!isRunning && !isGameWon && <Button className="start-button" label="Start" onClick={handleStartClick} />}
-        {(!isRunning || !isGameWon) && <Button className="restart-button" label="Shufle" onClick={handleRestartClick} />}
+        {(!isRunning || !isGameWon) && <Button className="restart-button" label="Shuffle" onClick={handleRestartClick} />}
         {isGameWon && (
           <div>
             <div className="message">You Won !</div>
@@ -184,10 +184,13 @@ function App() {
             />
           ))}
         </div>
-        <div className="difficulty-buttons">
-          <Button className="add-pair-button" label="Add Pair" onClick={handleAddPair} />
-          <Button className="remove-pair-button" label="Remove Pair" onClick={handleRemovePair} />
-        </div>
+          <div className="difficulty-buttons">
+            <div className="pair-indicator">
+              Number of Pairs: {numPairs}
+            </div>
+            <Button className="add-pair-button" label="Add Pair" onClick={handleAddPair} />
+            <Button className="remove-pair-button" label="Remove Pair" onClick={handleRemovePair} />
+          </div>
         <div className="leaderboard">
           <h2>Leaderboard</h2>
           <div className="sort-buttons-container">
@@ -196,24 +199,27 @@ function App() {
             <Button label="Reset Scores" onClick={handleResetScores} className="sort-button" />
           </div>
           <table>
-            <thead>
-              <tr>
-                <th>Player Name</th>
-                <th>Time</th>
-              </tr>
-            </thead>
+          <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Time</th>
+                  <th>№ Pairs</th>
+                </tr>
+              </thead>
             <tbody>
               {scores.map((score, index) => (
                 <tr key={index}>
-                  <td>{score.playerName}</td>
-                  <td>{formatTime(score.time)}</td>
-                </tr>
-              ))}
+                <td>{score.playerName}</td>
+                <td>{formatTime(score.time)}</td>
+                <td>{score.numPairs > 0 ? score.numPairs : 'No'}</td>
+              </tr>
+            ))}
             </tbody>
           </table>
         </div>
       </div>
     </div>
+
   );
 }
 
