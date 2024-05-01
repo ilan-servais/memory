@@ -32,6 +32,7 @@ body {
 }
 
 .button:hover {
+  border: 4px solid #C0DF40;
   color: #C0DF40;
   background-color: rgba(64, 181, 203, 0.67);
 }
