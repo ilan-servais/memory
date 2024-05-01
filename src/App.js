@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Button from './components/Button';
 import Card from './components/Card';
 import titleImage from './images/title.webp';
@@ -36,6 +36,7 @@ function App() {
   const [isGameWon, setIsGameWon] = useState(false);
   const [scores, setScores] = useState([]);
   const [playerName, setPlayerName] = useState('');
+  const cardContainerRef = useRef(null); // Référence à l'élément card-container
 
   useEffect(() => {
     let timer;
@@ -64,6 +65,7 @@ function App() {
     setIsRunning(true);
     setPairsFound(0);
     setCards(shuffle(generateCardPairs(numPairs).map(card => ({ ...card, isFlipped: false }))));
+    cardContainerRef.current.scrollIntoView({ behavior: 'smooth' });
   };
 
   const handleRestartClick = () => {
@@ -165,7 +167,9 @@ function App() {
     <div className="center-content">
       <div className="App">
         <img src={titleImage} alt="Titre" className="title-image" />
-        {!isRunning && !isGameWon && <Button className="start-button" label="Start" onClick={handleStartClick} />}
+        {!isRunning && !isGameWon && (
+          <Button className="start-button" label="Start" onClick={handleStartClick} />
+        )}
         {(!isRunning || !isGameWon) && <Button className="restart-button" label="Shuffle" onClick={handleRestartClick} />}
         {isGameWon && (
           <div>
@@ -175,7 +179,7 @@ function App() {
           </div>
         )}
         <div className="time">Time: {formatTime(time)}</div>
-        <div className="card-container">
+        <div ref={cardContainerRef} className="card-container">
           {cards.map(card => (
             <Card
               key={card.id}
