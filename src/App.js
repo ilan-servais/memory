@@ -102,6 +102,18 @@ function App() {
     }
   };
 
+  // Fonction pour définir le nombre de paires au maximum
+  const handleMaxPairs = () => {
+    setNumPairs(13);
+    setCards(generateCardPairs(13)); // Générer un nouveau jeu de cartes avec le nombre maximum de paires
+  };
+
+  // Fonction pour définir le nombre de paires au minimum
+  const handleMinPairs = () => {
+    setNumPairs(5);
+    setCards(generateCardPairs(5)); // Générer un nouveau jeu de cartes avec le nombre minimum de paires
+  };
+
   useEffect(() => {
     if (flippedCards.length === 2) {
       const [firstCard, secondCard] = flippedCards;
@@ -178,6 +190,15 @@ function App() {
             <Button className="save-score-button" label="Save Score" onClick={handleSaveScore} />
           </div>
         )}
+        <div className="difficulty-buttons">
+          <div className="pair-indicator">
+            Number of Pairs: {numPairs}
+          </div>
+          <Button className="min-pairs-button" label="Min Pairs" onClick={handleMinPairs} />
+          <Button className="remove-pair-button" label="Remove Pair" onClick={handleRemovePair} />
+          <Button className="add-pair-button" label="Add Pair" onClick={handleAddPair} />
+          <Button className="max-pairs-button" label="Max Pairs" onClick={handleMaxPairs} />
+        </div>
         <div className="time">Time: {formatTime(time)}</div>
         <div ref={cardContainerRef} className="card-container">
           {cards.map(card => (
@@ -188,13 +209,6 @@ function App() {
             />
           ))}
         </div>
-          <div className="difficulty-buttons">
-            <div className="pair-indicator">
-              Number of Pairs: {numPairs}
-            </div>
-            <Button className="add-pair-button" label="Add Pair" onClick={handleAddPair} />
-            <Button className="remove-pair-button" label="Remove Pair" onClick={handleRemovePair} />
-          </div>
         <div className="leaderboard">
           <h2>Leaderboard</h2>
           <div className="sort-buttons-container">

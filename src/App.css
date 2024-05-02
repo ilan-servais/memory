@@ -19,7 +19,7 @@ body {
 }
 
 .button {
-  font-size: 24px; 
+  font-size: 1.5rem; 
   margin-top: 10px;
   color: #40B5CB; 
   font-weight: bold; 
@@ -82,7 +82,7 @@ body {
 }
 
 .time, .message {
-  font-size: 24px; 
+  font-size: 1.5rem; 
   margin-top: 10px;
   color: #C0DF40; 
   font-weight: bold; 
@@ -126,7 +126,7 @@ body {
 }
 
 .leaderboard th, .leaderboard td {
-  font-size: 24px; 
+  font-size: 1.5rem; 
   color: #C0DF40; 
   font-weight: bold; 
   font-style: italic; 
@@ -141,7 +141,7 @@ body {
 }
 
 input[type="text"] {
-  font-size: 24px; 
+  font-size: 1.5rem; 
   color: #C0DF40; 
   font-weight: bold; 
   font-style: italic; 
@@ -193,9 +193,10 @@ input[type="text"]::placeholder {
 }
 
 .pair-indicator {
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   font-weight: bold;
   margin-bottom: 10px;
+  margin-top: 10px;
   color: #C0DF40;
   background-color: #40B5CB;
   padding: 10px;
