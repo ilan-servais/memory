@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Button from './components/Button';
 import Card from './components/Card';
 import titleImage from './images/title.webp';
-import backImage from './images/image6.webp';
+import backImage from './images/backImage.webp';
 import cardImages from './data';
 import './App.css';
 
@@ -88,7 +88,7 @@ function App() {
 
   // Fonction pour ajouter une paire
   const handleAddPair = () => {
-    if (numPairs < 13) { // Limiter le nombre maximal de paires
+    if (numPairs < 22) { // Limiter le nombre maximal de paires
       setNumPairs(prevNumPairs => prevNumPairs + 1);
       setCards(generateCardPairs(numPairs + 1)); // Générer un nouveau jeu de cartes avec une paire supplémentaire
     }
@@ -104,8 +104,8 @@ function App() {
 
   // Fonction pour définir le nombre de paires au maximum
   const handleMaxPairs = () => {
-    setNumPairs(13);
-    setCards(generateCardPairs(13)); // Générer un nouveau jeu de cartes avec le nombre maximum de paires
+    setNumPairs(22);
+    setCards(generateCardPairs(22)); // Générer un nouveau jeu de cartes avec le nombre maximum de paires
   };
 
   // Fonction pour définir le nombre de paires au minimum
