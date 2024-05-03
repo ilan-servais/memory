@@ -37,7 +37,10 @@ function App() {
   const [scores, setScores] = useState([]);
   const [playerName, setPlayerName] = useState('');
   const cardContainerRef = useRef(null); // Référence à l'élément card-container
-
+  const [sortByName, setSortByName] = useState(null);
+  const [sortByTime, setSortByTime] = useState(null);
+  const [sortByPairs, setSortByPairs] = useState(null);
+  
   useEffect(() => {
     let timer;
     if (isRunning && pairsFound !== numPairs) {
@@ -156,15 +159,42 @@ function App() {
     setScores([]);
   };
 
-  const handleSortScores = () => {
-    const sortedScores = [...scores].sort((a, b) => a.time - b.time);
+  const handleSortScoresByTime = () => {
+    const sortedScores = [...scores].sort((a, b) => {
+        if (sortByTime === 'asc') {
+            return a.time - b.time;
+        } else {
+            return b.time - a.time;
+        }
+    });
     setScores(sortedScores);
-  };
+    setSortByTime(sortByTime === 'asc' ? 'desc' : 'asc');
+};
 
-  const handleSortScoresByName = () => {
-    const sortedScores = [...scores].sort((a, b) => a.playerName.localeCompare(b.playerName));
+const handleSortScoresByName = () => {
+    const sortedScores = [...scores].sort((a, b) => {
+        if (sortByName === 'asc') {
+            return a.playerName.localeCompare(b.playerName);
+        } else {
+            return b.playerName.localeCompare(a.playerName);
+        }
+    });
     setScores(sortedScores);
-  };
+    setSortByName(sortByName === 'asc' ? 'desc' : 'asc');
+};
+
+const handleSortScoresByPairs = () => {
+    const sortedScores = [...scores].sort((a, b) => {
+        if (sortByPairs === 'asc') {
+            return a.numPairs - b.numPairs;
+        } else {
+            return b.numPairs - a.numPairs;
+        }
+    });
+    setScores(sortedScores);
+    setSortByPairs(sortByPairs === 'asc' ? 'desc' : 'asc');
+};
+
 
   useEffect(() => {
     const storedScores = JSON.parse(localStorage.getItem('memory_game_scores')) || [];
@@ -190,10 +220,10 @@ function App() {
             <Button className="save-score-button" label="Save Score" onClick={handleSaveScore} />
           </div>
         )}
-        <div className="difficulty-buttons">
           <div className="pair-indicator">
             Number of Pairs: {numPairs}
           </div>
+          <div className="difficulty-buttons">
           <Button className="min-pairs-button" label="Min Pairs" onClick={handleMinPairs} />
           <Button className="remove-pair-button" label="Remove Pair" onClick={handleRemovePair} />
           <Button className="add-pair-button" label="Add Pair" onClick={handleAddPair} />
@@ -212,16 +242,14 @@ function App() {
         <div className="leaderboard">
           <h2>Leaderboard</h2>
           <div className="sort-buttons-container">
-            <Button label="Sort by Time" onClick={handleSortScores} className="sort-button" />
-            <Button label="Sort by Name" onClick={handleSortScoresByName} className="sort-button" />
             <Button label="Reset Scores" onClick={handleResetScores} className="sort-button" />
           </div>
           <table>
           <thead>
                 <tr>
-                  <th>Name</th>
-                  <th>Time</th>
-                  <th>№ Pairs</th>
+                <th onClick={() => handleSortScoresByName()} className={sortByName === 'asc' ? 'sorted-asc' : sortByName === 'desc' ? 'sorted-desc' : ''}>Name</th>
+                <th onClick={() => handleSortScoresByTime()} className={sortByTime === 'asc' ? 'sorted-asc' : sortByTime === 'desc' ? 'sorted-desc' : ''}>Time</th>
+                <th onClick={() => handleSortScoresByPairs()} className={sortByPairs === 'asc' ? 'sorted-asc' : sortByPairs === 'desc' ? 'sorted-desc' : ''}>№ Pairs</th>
                 </tr>
               </thead>
             <tbody>
