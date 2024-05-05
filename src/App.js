@@ -36,7 +36,7 @@ function App() {
   const [isGameWon, setIsGameWon] = useState(false);
   const [scores, setScores] = useState([]);
   const [playerName, setPlayerName] = useState('');
-  const cardContainerRef = useRef(null); // Référence à l'élément card-container
+  const cardContainerRef = useRef(null); 
   const [sortByName, setSortByName] = useState(null);
   const [sortByTime, setSortByTime] = useState(null);
   const [sortByPairs, setSortByPairs] = useState(null);
@@ -215,7 +215,6 @@ const handleSortScoresByPairs = () => {
         {(!isRunning || !isGameWon) && <Button className="restart-button" label="Shuffle" onClick={handleRestartClick} />}
         {isGameWon && (
           <div>
-            <div className="message">You Won !</div>
             <input type="text" value={playerName} onChange={handlePlayerNameChange} placeholder="Enter your name" />
             <Button className="save-score-button" label="Save Score" onClick={handleSaveScore} />
           </div>
@@ -225,8 +224,8 @@ const handleSortScoresByPairs = () => {
           </div>
           <div className="difficulty-buttons">
           <Button className="min-pairs-button" label="Min Pairs" onClick={handleMinPairs} />
-          <Button className="remove-pair-button" label="Remove Pair" onClick={handleRemovePair} />
-          <Button className="add-pair-button" label="Add Pair" onClick={handleAddPair} />
+          <Button className="remove-pair-button" label="-1 Pair" onClick={handleRemovePair} />
+          <Button className="add-pair-button" label="+1 Pair" onClick={handleAddPair} />
           <Button className="max-pairs-button" label="Max Pairs" onClick={handleMaxPairs} />
         </div>
         <div className="time">Time: {formatTime(time)}</div>
