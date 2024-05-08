@@ -36,11 +36,11 @@ function App() {
   const [isGameWon, setIsGameWon] = useState(false);
   const [scores, setScores] = useState([]);
   const [playerName, setPlayerName] = useState('');
-  const cardContainerRef = useRef(null); 
+  const cardContainerRef = useRef(null); // Référence à l'élément card-container
   const [sortByName, setSortByName] = useState(null);
   const [sortByTime, setSortByTime] = useState(null);
   const [sortByPairs, setSortByPairs] = useState(null);
-  
+
   useEffect(() => {
     let timer;
     if (isRunning && pairsFound !== numPairs) {
@@ -91,7 +91,7 @@ function App() {
 
   // Fonction pour ajouter une paire
   const handleAddPair = () => {
-    if (numPairs < 22) { // Limiter le nombre maximal de paires
+    if (numPairs < 18) { // Limiter le nombre maximal de paires
       setNumPairs(prevNumPairs => prevNumPairs + 1);
       setCards(generateCardPairs(numPairs + 1)); // Générer un nouveau jeu de cartes avec une paire supplémentaire
     }
@@ -107,8 +107,8 @@ function App() {
 
   // Fonction pour définir le nombre de paires au maximum
   const handleMaxPairs = () => {
-    setNumPairs(22);
-    setCards(generateCardPairs(22)); // Générer un nouveau jeu de cartes avec le nombre maximum de paires
+    setNumPairs(18);
+    setCards(generateCardPairs(18)); // Générer un nouveau jeu de cartes avec le nombre maximum de paires
   };
 
   // Fonction pour définir le nombre de paires au minimum
@@ -215,14 +215,15 @@ const handleSortScoresByPairs = () => {
         {(!isRunning || !isGameWon) && <Button className="restart-button" label="Shuffle" onClick={handleRestartClick} />}
         {isGameWon && (
           <div>
+            <div className="victory-message">You Won ! Wubalubadubdub !</div>
             <input type="text" value={playerName} onChange={handlePlayerNameChange} placeholder="Enter your name" />
             <Button className="save-score-button" label="Save Score" onClick={handleSaveScore} />
           </div>
         )}
-          <div className="pair-indicator">
-            Number of Pairs: {numPairs}
-          </div>
-          <div className="difficulty-buttons">
+        <div className="pair-indicator">
+          Number of Pairs: {numPairs}
+        </div>
+        <div className="difficulty-buttons">
           <Button className="min-pairs-button" label="Min Pairs" onClick={handleMinPairs} />
           <Button className="remove-pair-button" label="-1 Pair" onClick={handleRemovePair} />
           <Button className="add-pair-button" label="+1 Pair" onClick={handleAddPair} />
@@ -244,21 +245,21 @@ const handleSortScoresByPairs = () => {
             <Button label="Reset Scores" onClick={handleResetScores} className="sort-button" />
           </div>
           <table>
-          <thead>
-                <tr>
+            <thead>
+              <tr>
                 <th onClick={() => handleSortScoresByName()} className={sortByName === 'asc' ? 'sorted-asc' : sortByName === 'desc' ? 'sorted-desc' : ''}>Name</th>
                 <th onClick={() => handleSortScoresByTime()} className={sortByTime === 'asc' ? 'sorted-asc' : sortByTime === 'desc' ? 'sorted-desc' : ''}>Time</th>
                 <th onClick={() => handleSortScoresByPairs()} className={sortByPairs === 'asc' ? 'sorted-asc' : sortByPairs === 'desc' ? 'sorted-desc' : ''}>№ Pairs</th>
-                </tr>
-              </thead>
+              </tr>
+            </thead>
             <tbody>
               {scores.map((score, index) => (
                 <tr key={index}>
-                <td>{score.playerName}</td>
-                <td>{formatTime(score.time)}</td>
-                <td>{score.numPairs > 0 ? score.numPairs : 'No'}</td>
-              </tr>
-            ))}
+                  <td>{score.playerName}</td>
+                  <td>{formatTime(score.time)}</td>
+                  <td>{score.numPairs > 0 ? score.numPairs : 'No'}</td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
