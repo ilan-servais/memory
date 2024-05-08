@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import Confetti from 'react-confetti';
 import Button from './components/Button';
 import Card from './components/Card';
 import titleImage from './images/title.webp';
@@ -97,24 +98,21 @@ function App() {
     }
   };
 
-  // Fonction pour enlever une paire
   const handleRemovePair = () => {
-    if (numPairs > 5) { // Vérifie qu'il y a au moins 5 paires mini
+    if (numPairs > 5) { 
       setNumPairs(prevNumPairs => prevNumPairs - 1);
-      setCards(generateCardPairs(numPairs - 1)); // Générer un nouveau jeu de cartes avec une paire en moins
+      setCards(generateCardPairs(numPairs - 1)); 
     }
   };
 
-  // Fonction pour définir le nombre de paires au maximum
   const handleMaxPairs = () => {
     setNumPairs(18);
-    setCards(generateCardPairs(18)); // Générer un nouveau jeu de cartes avec le nombre maximum de paires
+    setCards(generateCardPairs(18));
   };
 
-  // Fonction pour définir le nombre de paires au minimum
   const handleMinPairs = () => {
     setNumPairs(5);
-    setCards(generateCardPairs(5)); // Générer un nouveau jeu de cartes avec le nombre minimum de paires
+    setCards(generateCardPairs(5));
   };
 
   useEffect(() => {
@@ -230,6 +228,9 @@ const handleSortScoresByPairs = () => {
           <Button className="max-pairs-button" label="Max Pairs" onClick={handleMaxPairs} />
         </div>
         <div className="time">Time: {formatTime(time)}</div>
+        {isGameWon && <Confetti
+          timeout={3000}
+        />}
         <div ref={cardContainerRef} className="card-container">
           {cards.map(card => (
             <Card
