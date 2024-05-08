@@ -1,3 +1,13 @@
+# Memory Game
+## Memory Game is a React-based web application that challenges your memory by asking you to find pairs of identical cards in a set of flipped cards. This game is fun for all ages and can help improve concentration and memory.
+
+### Features
+Classic memory game with flipped cards.
+Ability to adjust difficulty by changing the number of pairs of cards.
+Timer to track the time spent completing the game.
+Leaderboard to record the best times and number of pairs found.
+Responsive: adapts to different devices and screen sizes.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
